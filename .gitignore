@@ -1,0 +1,8 @@
+*.swp
+*.swo
+*.swn
+
+*.hi
+*.o
+*.exe
+
