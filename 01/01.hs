@@ -16,6 +16,7 @@ rev (x:xs) = rev xs ++ [x]
 --------
 -- ex 2
 
+-- I decided to start from the front, because I already have toDigitsRev
 doubleEveryOther :: [Integer] -> [Integer]
 doubleEveryOther (x:y:xs) = x : (2 * y) : doubleEveryOther xs
 doubleEveryOther xs       = xs
