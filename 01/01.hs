@@ -1,31 +1,34 @@
+--------
+-- ex 1
+
+toDigitsRev :: Integer -> [Integer]
+toDigitsRev n = rev (toDigits n)
 
 toDigits :: Integer -> [Integer]
 toDigits n 
   | n > 0     = map read (map (:[]) (show n))
   | otherwise = []
-  
---------
-
-toDigitsRev :: Integer -> [Integer]
-toDigitsRev n = rev (toDigits n)
 
 rev :: [a] -> [a]
 rev []     = []
 rev (x:xs) = rev xs ++ [x]
 
 --------
+-- ex 2
 
 doubleEveryOther :: [Integer] -> [Integer]
 doubleEveryOther (x:y:xs) = x : (2 * y) : doubleEveryOther xs
 doubleEveryOther xs       = xs
 
 --------
+-- ex 3
 
 sumDigits :: [Integer] -> Integer
 sumDigits [] = 0
 sumDigits (x:xs) = sum (toDigits x) + sumDigits xs
 
 --------
+-- ex 4
 
 validate :: Integer -> Bool
 validate n = checksum n `mod` 10 == 0
@@ -33,6 +36,7 @@ validate n = checksum n `mod` 10 == 0
 checksum = sumDigits . doubleEveryOther . rev . toDigits
 
 --------
+-- ex 5
 
 type Peg  = String
 type Move = (Peg, Peg)
