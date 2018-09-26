@@ -1,3 +1,5 @@
+{-# OPTIONS_GHC -Wall #-}
+
 --------
 -- ex 1
 
@@ -34,6 +36,7 @@ sumDigits (x:xs) = sum (toDigits x) + sumDigits xs
 validate :: Integer -> Bool
 validate n = checksum n `mod` 10 == 0
 
+checksum :: Integer -> Integer
 checksum = sumDigits . doubleEveryOther . rev . toDigits
 
 --------
@@ -44,7 +47,8 @@ type Move = (Peg, Peg)
 
 hanoi :: Integer -> Peg -> Peg -> Peg -> [Move]
 hanoi n _ _ _ | n < 1 = []
-hanoi 1 a b _ = [(a, b)]
-hanoi n a b c = hanoi (n - 1) a c b ++ [(a, b)] ++ hanoi (n - 1) c b a
+hanoi 1 a b _         = [(a, b)]
+hanoi n a b c         = hanoi (n - 1) a c b ++ [(a, b)] ++ hanoi (n - 1) c b a
 
+correct :: Bool
 correct = hanoi 2 "a" "b" "c" == [("a", "c"), ("a", "b"), ("c", "b")]
