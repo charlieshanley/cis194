@@ -38,6 +38,9 @@ build :: [LogMessage] -> MessageTree
 build []  = Leaf
 build (x:xs) = x `insert` build xs
 
+build' :: [LogMessage] -> MessageTree
+build' = foldr insert Leaf 
+
 ----------
 -- ex4
 
