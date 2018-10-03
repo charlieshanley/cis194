@@ -4,11 +4,11 @@ module LogAnalysis where
 
 import Log
 
-parseMessage :: String -> LogMessage
-parseMessage = parseWords . words
-
 ----------
 -- ex1
+
+parseMessage :: String -> LogMessage
+parseMessage = parseWords . words
 
 parseWords :: [String] -> LogMessage
 parseWords wrds = case wrds of
@@ -16,7 +16,6 @@ parseWords wrds = case wrds of
     ("W":tm:msg)     -> LogMessage Warning            (read tm) (unwords msg)
     ("E":lvl:tm:msg) -> LogMessage (Error $ read lvl) (read tm) (unwords msg)
     _                -> Unknown $ unwords wrds
-
 
 parse :: String -> [LogMessage]
 parse = map parseMessage . lines
