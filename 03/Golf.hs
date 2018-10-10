@@ -9,11 +9,11 @@ import Data.List (transpose)
 
 skips :: [a] -> [[a]]
 skips xs = flip skip xs `map` [0 .. (length xs - 1)]
-
-skip :: Int -> [a] -> [a]
-skip n xs = case drop n xs of
-    y:ys -> y : skip n ys
-    []   -> []
+    where
+        skip :: Int -> [a] -> [a]
+        skip n ys = case drop n ys of
+            z:zs -> z : skip n zs
+            []   -> []
 
 
 ----------
@@ -30,18 +30,19 @@ localMaxima _ = []
 -- 3
 
 histogram :: [Int] -> String
-histogram xs = unlines $ rows ++ ["==========", labels]
-    where labels = concat $ map show [0..9 :: Int]
-          stars :: Int -> String
-          stars n = replicate (length $ filter (==n) xs) '*'
-          rows = reverse . transpose . fill . map stars $ [0..9]
+histogram xs = unlines $ rows ++ ["==========\n0123456789"]
+    where
+        rows = reverse . transpose . fill . map stars $ [0..9]
 
-fill :: [String] -> [String]
-fill xs = pad len ' ' `map` xs
-    where len = maximum $ map length xs
+        stars :: Int -> String
+        stars n = replicate (length $ filter (==n) xs) '*'
 
-pad :: Int -> a -> [a] -> [a]
-pad n a = take n . (++ repeat a)
+        fill :: [String] -> [String]
+        fill ys = pad len ' ' `map` ys
+            where len = maximum $ map length ys
+
+        pad :: Int -> a -> [a] -> [a]
+        pad n a = take n . (++ repeat a)
 
 
 -- testing purposes
@@ -60,12 +61,9 @@ test = putHist [1,1,8,4,5,6,3,4,3,4,3,2,1,8,4,5,4,5,7,6,7,0,9,0]
 -- 1
 
 skips' :: [a] -> [[a]]
-skips' xs = skip' xs <$> [0 .. (length xs - 1)]
-
-skip' :: [a] -> Int -> [a]
-skip' xs n = case drop n xs of
-    (y:ys) -> y : skip' ys n
-    []     -> []
+skips' xs = skip xs <$> [0 .. (length xs - 1)]
+    where
+        skip ys n = case drop n ys of { (z:zs) -> z : skip zs n; [] -> [] }
 
 ----------
 -- 2
@@ -74,8 +72,9 @@ skip' xs n = case drop n xs of
 -- 3
 
 histogram' :: [Int] -> String
-histogram' xs = unlines $ rows ++ ["==========", [0..9 :: Int] >>= show]
-    where rows = reverse $ transpose $ fill' $ stars <$> [0..9]
-          stars n = replicate (length $ filter (==n) xs) '*'
-          fill' l = take (maximum $ length <$> l) . (++ repeat ' ') <$> l
+histogram' xs = unlines $ rows ++ ["==========\n0123456789"]
+    where
+        rows = reverse . transpose . fill $ stars <$> [0..9]
+        stars n = replicate (length $ filter (==n) xs) '*'
+        fill l = take (maximum $ length <$> l) . (++ repeat ' ') <$> l
 
