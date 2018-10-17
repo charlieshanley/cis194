@@ -93,4 +93,16 @@ myFoldl f = foldr (flip f)
 ----------
 -- 4
 
+sieveSundaram :: Integer -> [Integer]
+sieveSundaram = map ((+1) . (*2)) . sieve
+    where
+        sieve n = filter (not . (`elem` ij)) [1..n]
+            where ij = [i + j + 2*i*j | i <- half, j <- half, i <= j]
+                  half = [1..(div n 2)]
 
+sieveSundaram' :: Integer -> [Integer]
+sieveSundaram' n = map ((+1) . (*2)) . filter sieve $ [1..n]
+    where
+        sieve = not . (`elem` ij)
+        ij = [i + j + 2*i*j | i <- half, j <- half, i <= j]
+        half = [1..(div n 2)]
