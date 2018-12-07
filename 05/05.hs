@@ -1,4 +1,5 @@
 {-# OPTIONS_GHC -Wall             #-}
+{-# Language FlexibleInstances    #-}
 {-# Language TypeSynonymInstances #-}
 
 
@@ -6,7 +7,7 @@ module Five where
 
 import ExprT
 import Parser
-import StackVM (Program)
+import qualified StackVM as S
 
 ----------
 -- 1
@@ -69,6 +70,17 @@ testExp = parseExp lit add mul "(3 * -4) + 5"
 ----------
 -- 5
 
+instance Expr S.Program where
+    lit i     = [ S.PushI i ]
+    add e1 e2 = e1 ++ e2 ++ [ S.Add ]
+    mul e1 e2 = e1 ++ e2 ++ [ S.Mul ]
 
-compile :: String -> Maybe Program
-compile = undefined
+compile :: String -> Maybe S.Program
+compile = parseExp lit add mul
+
+testP :: Maybe S.Program
+testP = compile "((2 + 2) * 3) + 1"
+
+testS :: Either String S.StackVal
+testS = maybe (Left "parse failure") S.stackVM testP
+
