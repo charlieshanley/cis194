@@ -7,7 +7,8 @@ module Five where
 
 import ExprT
 import Parser
-import qualified StackVM as S
+import qualified StackVM  as S
+import qualified Data.Map as M
 
 ----------
 -- 1
@@ -84,3 +85,35 @@ testP = compile "((2 + 2) * 3) + 1"
 testS :: Either String S.StackVal
 testS = maybe (Left "parse failure") S.stackVM testP
 
+----------
+-- 6
+
+class HasVars a where
+    var :: String -> a
+
+data VarExprT = VVar String
+              | VLit Integer
+              | VAdd VarExprT VarExprT
+              | VMul VarExprT VarExprT
+    deriving (Show, Eq)
+
+instance Expr VarExprT where
+    lit = VLit
+    add = VAdd
+    mul = VMul
+
+instance HasVars VarExprT where
+    var = VVar
+
+instance HasVars (M.Map String Integer -> Maybe Integer) where
+    var = M.lookup
+
+instance Expr (M.Map String Integer -> Maybe Integer) where
+    lit       = const . Just
+    add f1 f2 = \m -> (+) <$> f1 m <*> f2 m
+    mul f1 f2 = \m -> (*) <$> f1 m <*> f2 m
+
+withVars :: [(String, Integer)]
+         -> (M.Map String Integer -> Maybe Integer)
+         -> Maybe Integer
+withVars vs expr = expr $ M.fromList vs
