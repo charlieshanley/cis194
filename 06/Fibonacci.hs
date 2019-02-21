@@ -94,3 +94,32 @@ fibs3 = x / (1 - x - x^(2 :: Integer))
 ----------
 -- 7
 
+data Matrix = Matrix Integer Integer
+                     Integer Integer -- wow, suprised this is parsed correctly
+
+fmat :: Matrix
+fmat = Matrix 1 1
+              1 0 -- suprsised this is parsed correctly, too
+
+instance Show Matrix where
+    show (Matrix a11 a12 a21 a22) =
+        show a11 ++ " " ++ show a12 ++ "\n" ++
+        show a21 ++ " " ++ show a22
+
+instance Num Matrix where
+    (Matrix a11 a12 a21 a22) * (Matrix b11 b12 b21 b22) = Matrix 
+        (a11*b11 + a12*b21) (a11*b12 + a12*b22)
+        (a21*b11 + a22*b21) (a21*b12 + a22*b22)
+    (+)         = undefined
+    abs         = undefined
+    signum      = undefined
+    fromInteger = undefined
+    negate      = undefined
+
+fibs4 :: Integer -> Integer
+fibs4 0 = 0
+fibs4 n = fn
+    where (Matrix _ fn _ _) = fmat^n
+
+
+-- Wow, super fast! O(log(n))
